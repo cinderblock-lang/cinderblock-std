@@ -9,7 +9,7 @@ namespace std.iterable {
     return make CountContext {
       assign done = target == 0i;
 
-      store wrapper = (current: int) -> {
+      store wrapper = fn (current: int) -> {
         return make CountContext {
           assign done = current == target;
 
