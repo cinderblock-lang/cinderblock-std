@@ -13,13 +13,13 @@ namespace std.iterable {
         return make CountContext {
           assign done = current == target;
 
-          assign next = () -> wrapper(current + 1i);
+          assign next = fn () -> wrapper(current + 1i);
 
           assign result = current + 1i;
         }
       };
 
-      assign next = () -> wrapper(0i);
+      assign next = fn () -> wrapper(0i);
     };
   }
 }
