@@ -1,0 +1,5 @@
+namespace std.io {
+  export fn print(data: string): int {
+    return sys_print(data);
+  }
+}

@@ -1,4 +1,9 @@
 {
-  "files": ["./src/iterable/count.cb", "./src/iterable/reduce.cb"],
+  "files": [
+    "./src/iterable/count.cb",
+    "./src/iterable/reduce.cb",
+    "./src/iterable/string.cb",
+    "./src/ui/print.cb"
+  ],
   "supported": ["linux", "macos", "windows", "android", "ios", "wasm"]
 }
