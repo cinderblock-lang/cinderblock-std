@@ -1,5 +1,6 @@
 namespace std.io {
-  export fn print(data: string): int {
-    return sys_print(data);
+  export fn log(data: string): int {
+    store input = data.concat("\n");
+    return sys_print(input, input.length());
   }
 }
