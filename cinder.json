@@ -5,5 +5,5 @@
     "./src/iterable/string.cb",
     "./src/io/log.cb"
   ],
-  "supported": ["linux", "macos", "windows", "android", "ios", "wasm"]
+  "targets": ["linux", "macos", "windows", "android", "ios", "wasm"]
 }
