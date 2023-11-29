@@ -1,18 +1,25 @@
 namespace std.iterable {
   export fn Reduce(target: [use any = T], start: use any = R, reducer: (item: T, current: R) -> R) {
-    store aggregator = fn (current: [T], result: R) -> {
-      return if (current.done) {
+    store aggregator = fn (current: int, result: R): R -> {
+      store item = target(current);
+      return if (item.done) {
         return result;
       } else {
-        store next = reducer(current.result, result);
-        return aggregator(current.next(), result);
+        store next = reducer(item.result, result);
+        return aggregator(current + 1i, next);
       };
     };
 
-    return if (target.done) {
-      return start;
-    } else {
-      return aggregator(target.next(), start);
+    return aggregator(0i, start);
+  }
+
+  test "Aggregates simply" {
+    store basic = iterate (Count(3i) as index) {
+      return index;
     };
+
+    store result = basic.Reduce(0i, fn (index: int, current: int) -> current + index);
+
+    return result == 3i;
   }
 }

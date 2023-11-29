@@ -1,9 +1,11 @@
 {
+  "name": "std",
   "files": [
     "./src/iterable/count.cb",
     "./src/iterable/reduce.cb",
     "./src/iterable/string.cb",
     "./src/io/log.cb"
   ],
-  "targets": ["linux", "macos", "windows", "android", "ios", "wasm"]
+  "targets": ["linux", "macos", "windows", "android", "ios", "wasm"],
+  "bin": "bin"
 }
