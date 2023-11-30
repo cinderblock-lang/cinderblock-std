@@ -14,7 +14,7 @@ namespace std.iterable {
   }
 
   test "Aggregates simply" {
-    store basic = iterate (Count(3i) as index) {
+    store basic = iterate (count(3i) as index) {
       return index;
     };
 
