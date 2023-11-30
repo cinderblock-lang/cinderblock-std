@@ -1,0 +1,13 @@
+namespace std.string {
+  export struct StringIterableContext {
+    done: bool;
+    result?: char;
+  }
+
+  export fn to_iterable(target: string): (index: int) -> StringIterableContext {
+    return fn (index: int) -> make StringIterableContext {
+      assign done = index >= target.length();
+      assign result = target.get_char(index);
+    };
+  }
+}

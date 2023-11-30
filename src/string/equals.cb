@@ -1,0 +1,26 @@
+namespace std.string {
+  fn equals_charred(subject: string, expected: string, index: int): bool {
+    store current = subject.get_char(index) == expected.get_char(index);
+
+    return if (index < subject.length() - 1i) {
+      return equals_charred(subject, expected, index + 1i);
+    } else {
+      return current;
+    };
+  }
+
+  export fn equals(subject: string, expected: string): bool {
+    return if (subject.length() != expected.length() || subject.length() == 0i) {
+      return false;
+    } else {
+      return equals_charred(subject, expected, 0i);
+    };
+  }
+
+  test "std.string.equals Equals a basic string" {
+    store first = "This is a test";
+    store second = "This is a test";
+
+    return first.equals(second);
+  }
+}

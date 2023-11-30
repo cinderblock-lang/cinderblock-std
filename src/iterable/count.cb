@@ -4,7 +4,7 @@ namespace std.iterable {
     result?: int;
   }
 
-  export fn Count(target: int): (index: int) -> CountContext {
+  export fn count(target: int): (index: int) -> CountContext {
     return fn (index: int) -> make CountContext {
       assign done = index >= target;
       assign result = index;

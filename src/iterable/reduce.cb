@@ -1,5 +1,5 @@
 namespace std.iterable {
-  export fn Reduce(target: [use any = T], start: use any = R, reducer: (item: T, current: R) -> R) {
+  export fn reduce(target: [use any = T], start: use any = R, reducer: (item: T, current: R) -> R) {
     store aggregator = fn (current: int, result: R): R -> {
       store item = target(current);
       return if (item.done) {
@@ -18,7 +18,7 @@ namespace std.iterable {
       return index;
     };
 
-    store result = basic.Reduce(0i, fn (index: int, current: int) -> current + index);
+    store result = basic.reduce(0i, fn (index: int, current: int) -> current + index);
 
     return result == 3i;
   }
