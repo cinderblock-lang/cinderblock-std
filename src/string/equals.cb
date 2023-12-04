@@ -2,7 +2,7 @@ namespace std.string {
   fn equals_charred(subject: string, expected: string, index: int): bool {
     store current = subject.get_char(index) == expected.get_char(index);
 
-    return if (index < subject.length() - 1i) {
+    return if (index < subject.length() - 1i && current == true) {
       return equals_charred(subject, expected, index + 1i);
     } else {
       return current;
@@ -22,5 +22,19 @@ namespace std.string {
     store second = "This is a test";
 
     return first.equals(second);
+  }
+
+  test "std.string.equals Does not equal basic string" {
+    store first = "This is a test";
+    store second = "This is a different test";
+
+    return first.equals(second) == false;
+  }
+
+  test "std.string.equals Does not equal two strings of the same length" {
+    store first = "This is a test";
+    store second = "This 1s b test";
+
+    return first.equals(second) == false;
   }
 }

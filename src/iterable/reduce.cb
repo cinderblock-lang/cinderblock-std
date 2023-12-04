@@ -13,7 +13,7 @@ namespace std.iterable {
     return aggregator(0i, start);
   }
 
-  test "Aggregates simply" {
+  test "std.iterable.reduce Aggregates simply" {
     store basic = iterate (count(3i) as index) {
       return index;
     };
