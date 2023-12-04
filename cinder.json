@@ -4,10 +4,11 @@
     "./src/iterable/count.cb",
     "./src/iterable/reduce.cb",
     "./src/string/iterable.cb",
-    "./src/string/to_string.cb",
+    "./src/string/creation.cb",
     "./src/string/equals.cb",
     "./src/io/log.cb"
   ],
   "targets": ["linux", "macos", "windows", "android", "ios", "wasm"],
-  "bin": "bin"
+  "bin": "bin",
+  "no_std": true
 }
