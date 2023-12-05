@@ -3,8 +3,7 @@
   "files": [
     "./src/iterable/count.cb",
     "./src/iterable/reduce.cb",
-    "./src/string/iterable.cb",
-    "./src/string/creation.cb",
+    "./src/string/utf-8.cb",
     "./src/string/equals.cb",
     "./src/io/log.cb"
   ],
