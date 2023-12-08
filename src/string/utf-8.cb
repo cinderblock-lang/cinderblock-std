@@ -1,6 +1,7 @@
 namespace std.string.utf_8 {
   using std.string;
   using std.testing;
+  using std.iterable;
   
   export struct StringIterableContext {
     done: bool;
@@ -8,66 +9,82 @@ namespace std.string.utf_8 {
     next: int;
   }
 
-  export fn get_character(target: string, index: int): int {
-    store start = target.get_char(index);
+  fn isolate_bits(target: int, skip: int, take: int): int {
+    store mask = (1i << take) - 1i;
+    store start = target >> skip;
+    return start & mask;
+  }
 
-    return if (target >= (0b11110000)) {
-      return subject.extract_four_bytes(target);
+  fn extract_four_bytes(subject: string, index: int): string {
+    return
+      (subject.get_char(index).isolate_bits(0i, 4i) << 18i) +
+      (subject.get_char(index + 1i).isolate_bits(0i, 6i) << 12i) +
+      (subject.get_char(index + 2i).isolate_bits(0i, 6i) << 6i) +
+      (subject.get_char(index + 3i).isolate_bits(0i, 6i));
+
+    return subject
+      .add_char(0b11110000 + target.isolate_bits(18i, 3i))
+      .add_char(0b10000000 + target.isolate_bits(12i, 6i))
+      .add_char(0b10000000 + target.isolate_bits(6i, 6i))
+      .add_char(0b10000000 + target.isolate_bits(0i, 6i));
+  }
+
+  fn extract_three_bytes(subject: string, index: int): string {
+    return
+      (subject.get_char(index).isolate_bits(0i, 4i) << 12i) +
+      (subject.get_char(index + 1i).isolate_bits(0i, 6i) << 6i) +
+      (subject.get_char(index + 2i).isolate_bits(0i, 6i));
+  }
+
+  fn extract_two_bytes(subject: string, index: int): string {
+    return
+      (subject.get_char(index).isolate_bits(0i, 5i) << 6i) +
+      (subject.get_char(index + 1i).isolate_bits(0i, 6i));
+  }
+
+  fn extract_one_bytes(subject: string, index: int): string {
+    return subject.get_char(index);
+  }
+
+  export fn get_character(target: string, index: int): StringIterableContext {
+    store start = target.get_char(index);
+    store length = target.length();
+
+    return if (start >= (0b11110000)) {
+      return make StringIterableContext {
+        assign next = index + 4i;
+        assign result = target.extract_four_bytes(index);
+        assign done = index + 4i >= length;
+      };
     } else {
-      return if (target >= (0b11100000)) {
-        return subject.extract_three_bytes(target);
+      return if (start >= (0b11100000)) {
+        return make StringIterableContext {
+          assign next = index + 3i;
+          assign result = target.extract_three_bytes(index);
+          assign done = index + 3i >= length;
+        };
       } else {
-        return if (target >= 0b11000000) {
-          return subject.extract_two_bytes(target);
+        return if (start >= 0b11000000) {
+          return make StringIterableContext {
+            assign next = index + 2i;
+            assign result = target.extract_two_bytes(index);
+            assign done = index + 2i >= length;
+          };
         } else {
-          return subject.extract_one_bytes(target);
+          return make StringIterableContext {
+            assign next = index + 1i;
+            assign result = target.extract_one_bytes(index);
+            assign done = index + 1i >= length;
+          };
         };
       };
     };
   }
 
   export fn to_iterable(target: string): (index: int) -> StringIterableContext {
-    store length = target.length();
-
     return fn (index: int) -> {
-      store result = target.get_character(index);
-
-      return if (result >= (65536i)) {
-        return make StringIterableContext {
-          assign next = index + 4i;
-          assign result = result;
-          assign done = index + 4i >= length;
-        };
-      } else {
-        return if (result >= (2048i)) {
-          return make StringIterableContext {
-            assign next = index + 3i;
-            assign result = result;
-            assign done = index + 3i >= length;
-          };
-        } else {
-          return if (result >= 255i) {
-            return make StringIterableContext {
-              assign next = index + 2i;
-              assign result = result;
-              assign done = index + 2i >= length;
-            };
-          } else {
-            return make StringIterableContext {
-              assign next = index + 1i;
-              assign result = result;
-              assign done = index + 1i >= length;
-            };
-          };
-        };
-      };
+      return target.get_character(index);
     };
-  }
-
-  fn isolate_bits(target: int, skip: int, take: int): int {
-    store mask = (1i << take) - 1i;
-    store start = target >> skip;
-    return start & mask;
   }
 
   fn add_four_bytes(subject: string, target: int): string {
@@ -125,5 +142,16 @@ namespace std.string.utf_8 {
 
   test "std.string.utf_8.add_character Creates a four byte char" {
     return "".add_character(128516i).expect_equals("😄");
+  }
+
+  test "std.string.utf_8.to_iterable Gets a group of character codes" {
+    return (
+        iterate("0Ƕ私😄".to_iterable() as character) {
+          return character;
+        }
+      ).reduce(
+        "",
+        fn (character: int, result: string) -> result.add_character(character + 1i)
+      ).expect_equals("0Ƕ私😄");
   }
 }
