@@ -2,12 +2,14 @@ namespace std.iterable {
   export struct CountContext {
     done: bool;
     result?: int;
+    next?: int;
   }
 
   export fn count(target: int): (index: int) -> CountContext {
     return fn (index: int) -> make CountContext {
       assign done = index >= target;
       assign result = index;
+      assign next = index + 1i;
     };
   }
 }

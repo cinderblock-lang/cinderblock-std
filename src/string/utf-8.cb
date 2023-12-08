@@ -14,52 +14,56 @@ namespace std.string.utf_8 {
   }
 
   fn isolate_bits(target: int, begin: int, end: int): int {
-    store mask = ((1 << (end - begin)) - 1) << begin;
+    store mask = ((1i << (end - begin)) - 1i) << begin;
     return target & mask;
   }
 
-  fn create_four_bit(target: int): string {
-    return ""
+  fn add_four_bit(subject: string, target: int): string {
+    return subject
       .add_char(0b11110000 + target.isolate_bits(19i, 22i))
       .add_char(0b10000000 + target.isolate_bits(13i, 18i))
       .add_char(0b10000000 + target.isolate_bits(7i, 12i))
       .add_char(0b10000000 + target.isolate_bits(0i, 6i));
   }
 
-  fn create_three_bit(target: int): string {
-    return ""
+  fn add_three_bit(subject: string, target: int): string {
+    return subject
       .add_char(0b11100000 + target.isolate_bits(13i, 16i))
       .add_char(0b10000000 + target.isolate_bits(7i, 12i))
       .add_char(0b10000000 + target.isolate_bits(0i, 6i));
   }
 
-  fn create_two_bit(target: int): string {
-    return ""
+  fn add_two_bit(subject: string, target: int): string {
+    return subject
       .add_char(0b11000000 + target.isolate_bits(7i, 11i))
       .add_char(0b10000000 + target.isolate_bits(0i, 6i));
   }
 
-  fn create_one_bit(target: int): string {
-    return "".add_char(target);
+  fn add_one_bit(subject: string, target: int): string {
+    return subject.add_char(target);
   }
 
-  export fn as_string(target: int): string {
+  export fn add_character(subject: string, target: int): string {
     return if (target >= (255i * 255i * 255i)) {
-      return create_four_bit(target);
+      return subject.add_four_bit(target);
     } else {
       return if (target >= (255i * 255i)) {
-        return create_three_bit(target);
+        return subject.add_three_bit(target);
       } else {
         return if (target >= 255i) {
-          return create_two_bit(target);
+          return subject.add_two_bit(target);
         } else {
-          return create_one_bit(target);
+          return subject.add_one_bit(target);
         };
       };
     };
   }
 
-  test "std.string.utf_8.as_string Creats a single bit char" {
-    return 48i.as_string().equals("0");
+  test "std.string.utf_8.add_character Creats a single bit char" {
+    return "".add_character(48i).equals("0");
+  }
+
+  test "std.string.utf_8.add_character Creates a two bit char" {
+    return "".add_character(502i).equals("Ƕ");
   }
 }

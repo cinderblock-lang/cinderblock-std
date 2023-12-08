@@ -6,7 +6,7 @@ namespace std.iterable {
         return result;
       } else {
         store next = reducer(item.result, result);
-        return aggregator(current + 1i, next);
+        return aggregator(item.next, next);
       };
     };
 
