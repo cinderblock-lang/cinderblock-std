@@ -78,6 +78,18 @@ namespace std.string.utf_8 {
     };
   }
 
+  test "std.string.utf_8.to_iterable Gets a group of character codes" {
+    return (
+      iterate("0Ƕ私😁".to_iterable() as character) {
+        return character;
+      }
+    ).reduce(
+      "",
+      fn (character: int, result: string) ->
+        result.add_character(character + 1i)
+    ).expect_equals("1Ƿ秂");
+  }
+
   fn add_four_bytes(subject: string, target: int): string {
     return subject
       .add_char(0b11110000 + target.isolate_bits(18i, 3i))
@@ -129,17 +141,5 @@ namespace std.string.utf_8 {
 
   test "std.string.utf_8.add_character Creates a four byte char" {
     return "".add_character(128516i).expect_equals("😄");
-  }
-
-  test "std.string.utf_8.to_iterable Gets a group of character codes" {
-    return (
-      iterate("0Ƕ私😁".to_iterable() as character) {
-        return character;
-      }
-    ).reduce(
-      "",
-      fn (character: int, result: string) ->
-        result.add_character(character + 1i)
-    ).expect_equals("1Ƿ秂");
   }
 }
