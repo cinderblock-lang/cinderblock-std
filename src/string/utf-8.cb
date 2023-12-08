@@ -14,29 +14,30 @@ namespace std.string.utf_8 {
     };
   }
 
-  fn isolate_bits(target: int, begin: int, end: int): int {
-    store mask = ((1i << (end - begin)) - 1i) << begin;
-    return target & mask >> begin;
+  fn isolate_bits(target: int, skip: int, take: int): int {
+    store mask = (1i << take) - 1i;
+    store start = target >> skip;
+    return start & mask;
   }
 
   fn add_four_bytes(subject: string, target: int): string {
     return subject
-      .add_char(0b11110000 + target.isolate_bits(19i, 22i))
-      .add_char(0b10000000 + target.isolate_bits(13i, 18i))
-      .add_char(0b10000000 + target.isolate_bits(7i, 12i))
+      .add_char(0b11110000 + target.isolate_bits(18i, 3i))
+      .add_char(0b10000000 + target.isolate_bits(12i, 6i))
+      .add_char(0b10000000 + target.isolate_bits(6i, 6i))
       .add_char(0b10000000 + target.isolate_bits(0i, 6i));
   }
 
   fn add_three_bytes(subject: string, target: int): string {
     return subject
-      .add_char(0b11100000 + target.isolate_bits(13i, 16i))
-      .add_char(0b10000000 + target.isolate_bits(7i, 12i))
+      .add_char(0b11100000 + target.isolate_bits(12i, 4i))
+      .add_char(0b10000000 + target.isolate_bits(6i, 6i))
       .add_char(0b10000000 + target.isolate_bits(0i, 6i));
   }
 
   fn add_two_bytes(subject: string, target: int): string {
     return subject
-      .add_char(0b11000000 + target.isolate_bits(7i, 11i))
+      .add_char(0b11000000 + target.isolate_bits(6i, 5i))
       .add_char(0b10000000 + target.isolate_bits(0i, 6i));
   }
 
@@ -66,5 +67,9 @@ namespace std.string.utf_8 {
 
   test "std.string.utf_8.add_character Creates a two bit char" {
     return "".add_character(502i).expect_equals("Ƕ");
+  }
+
+  test "std.string.utf_8.add_character Creates a three bit char" {
+    return "".add_character(128516i).expect_equals("😄");
   }
 }
