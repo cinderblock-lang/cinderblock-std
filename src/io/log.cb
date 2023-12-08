@@ -1,5 +1,5 @@
 namespace std.io {
-  export fn log(data: string): int {
+  export unsafe fn log(data: string): int {
     store input = data.concat("\n");
     return sys_print(input, input.length());
   }

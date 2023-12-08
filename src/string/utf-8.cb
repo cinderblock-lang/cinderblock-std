@@ -1,5 +1,6 @@
 namespace std.string.utf_8 {
   using std.string;
+  using std.testing;
   
   export struct StringIterableContext {
     done: bool;
@@ -64,6 +65,6 @@ namespace std.string.utf_8 {
   }
 
   test "std.string.utf_8.add_character Creates a two bit char" {
-    return "".add_character(502i).equals("Ƕ");
+    return "".add_character(502i).expect_equals("Ƕ");
   }
 }
