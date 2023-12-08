@@ -4,13 +4,63 @@ namespace std.string.utf_8 {
   
   export struct StringIterableContext {
     done: bool;
-    result?: char;
+    result?: int;
+    next: int;
+  }
+
+  export fn get_character(target: string, index: int): int {
+    store start = target.get_char(index);
+
+    return if (target >= (0b11110000)) {
+      return subject.extract_four_bytes(target);
+    } else {
+      return if (target >= (0b11100000)) {
+        return subject.extract_three_bytes(target);
+      } else {
+        return if (target >= 0b11000000) {
+          return subject.extract_two_bytes(target);
+        } else {
+          return subject.extract_one_bytes(target);
+        };
+      };
+    };
   }
 
   export fn to_iterable(target: string): (index: int) -> StringIterableContext {
-    return fn (index: int) -> make StringIterableContext {
-      assign done = index >= target.length();
-      assign result = target.get_char(index);
+    store length = target.length();
+
+    return fn (index: int) -> {
+      store result = target.get_character(index);
+
+      return if (result >= (65536i)) {
+        return make StringIterableContext {
+          assign next = index + 4i;
+          assign result = result;
+          assign done = index + 4i >= length;
+        };
+      } else {
+        return if (result >= (2048i)) {
+          return make StringIterableContext {
+            assign next = index + 3i;
+            assign result = result;
+            assign done = index + 3i >= length;
+          };
+        } else {
+          return if (result >= 255i) {
+            return make StringIterableContext {
+              assign next = index + 2i;
+              assign result = result;
+              assign done = index + 2i >= length;
+            };
+          } else {
+            return make StringIterableContext {
+              assign next = index + 1i;
+              assign result = result;
+              assign done = index + 1i >= length;
+            };
+          };
+        };
+      };
     };
   }
 
