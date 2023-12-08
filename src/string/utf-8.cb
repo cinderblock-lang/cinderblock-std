@@ -2,6 +2,7 @@ namespace std.string.utf_8 {
   using std.string;
   using std.testing;
   using std.iterable;
+  using std.io;
   
   export struct StringIterableContext {
     done: bool;
@@ -15,34 +16,28 @@ namespace std.string.utf_8 {
     return start & mask;
   }
 
-  fn extract_four_bytes(subject: string, index: int): string {
+  fn extract_four_bytes(subject: string, index: int): int {
     return
       (subject.get_char(index).isolate_bits(0i, 4i) << 18i) +
       (subject.get_char(index + 1i).isolate_bits(0i, 6i) << 12i) +
       (subject.get_char(index + 2i).isolate_bits(0i, 6i) << 6i) +
       (subject.get_char(index + 3i).isolate_bits(0i, 6i));
-
-    return subject
-      .add_char(0b11110000 + target.isolate_bits(18i, 3i))
-      .add_char(0b10000000 + target.isolate_bits(12i, 6i))
-      .add_char(0b10000000 + target.isolate_bits(6i, 6i))
-      .add_char(0b10000000 + target.isolate_bits(0i, 6i));
   }
 
-  fn extract_three_bytes(subject: string, index: int): string {
+  fn extract_three_bytes(subject: string, index: int): int {
     return
       (subject.get_char(index).isolate_bits(0i, 4i) << 12i) +
       (subject.get_char(index + 1i).isolate_bits(0i, 6i) << 6i) +
       (subject.get_char(index + 2i).isolate_bits(0i, 6i));
   }
 
-  fn extract_two_bytes(subject: string, index: int): string {
+  fn extract_two_bytes(subject: string, index: int): int {
     return
       (subject.get_char(index).isolate_bits(0i, 5i) << 6i) +
       (subject.get_char(index + 1i).isolate_bits(0i, 6i));
   }
 
-  fn extract_one_bytes(subject: string, index: int): string {
+  fn extract_one_bytes(subject: string, index: int): int {
     return subject.get_char(index);
   }
 
@@ -50,21 +45,21 @@ namespace std.string.utf_8 {
     store start = target.get_char(index);
     store size = target.length();
 
-    return if (start >= (0b11110000)) {
+    return if (start.isolate_bits(3i, 5i) == 0b11110) {
       return make StringIterableContext {
         assign next = index + 4i;
         assign result = target.extract_four_bytes(index);
         assign done = index + 4i >= size;
       };
     } else {
-      return if (start >= (0b11100000)) {
+      return if (start.isolate_bits(4i, 4i) == 0b1110) {
         return make StringIterableContext {
           assign next = index + 3i;
           assign result = target.extract_three_bytes(index);
           assign done = index + 3i >= size;
         };
       } else {
-        return if (start >= 0b11000000) {
+        return if (start.isolate_bits(5i, 3i) == 0b110) {
           return make StringIterableContext {
             assign next = index + 2i;
             assign result = target.extract_two_bytes(index);
@@ -146,12 +141,13 @@ namespace std.string.utf_8 {
 
   test "std.string.utf_8.to_iterable Gets a group of character codes" {
     return (
-        iterate("0Ƕ私😄".to_iterable() as character) {
-          return character;
-        }
-      ).reduce(
-        "",
-        fn (character: int, result: string) -> result.add_character(character + 1i)
-      ).expect_equals("0Ƕ私😄");
+      iterate("0Ƕ私😁".to_iterable() as character) {
+        return character;
+      }
+    ).reduce(
+      "",
+      fn (character: int, result: string) ->
+        result.add_character(character + 1i)
+    ).expect_equals("1Ƿ秂");
   }
 }
