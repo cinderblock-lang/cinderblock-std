@@ -16,10 +16,10 @@ namespace std.string.utf_8 {
 
   fn isolate_bits(target: int, begin: int, end: int): int {
     store mask = ((1i << (end - begin)) - 1i) << begin;
-    return target & mask;
+    return target & mask >> begin;
   }
 
-  fn add_four_bit(subject: string, target: int): string {
+  fn add_four_bytes(subject: string, target: int): string {
     return subject
       .add_char(0b11110000 + target.isolate_bits(19i, 22i))
       .add_char(0b10000000 + target.isolate_bits(13i, 18i))
@@ -27,41 +27,41 @@ namespace std.string.utf_8 {
       .add_char(0b10000000 + target.isolate_bits(0i, 6i));
   }
 
-  fn add_three_bit(subject: string, target: int): string {
+  fn add_three_bytes(subject: string, target: int): string {
     return subject
       .add_char(0b11100000 + target.isolate_bits(13i, 16i))
       .add_char(0b10000000 + target.isolate_bits(7i, 12i))
       .add_char(0b10000000 + target.isolate_bits(0i, 6i));
   }
 
-  fn add_two_bit(subject: string, target: int): string {
+  fn add_two_bytes(subject: string, target: int): string {
     return subject
       .add_char(0b11000000 + target.isolate_bits(7i, 11i))
       .add_char(0b10000000 + target.isolate_bits(0i, 6i));
   }
 
-  fn add_one_bit(subject: string, target: int): string {
+  fn add_one_bytes(subject: string, target: int): string {
     return subject.add_char(target);
   }
 
   export fn add_character(subject: string, target: int): string {
     return if (target >= (255i * 255i * 255i)) {
-      return subject.add_four_bit(target);
+      return subject.add_four_bytes(target);
     } else {
       return if (target >= (255i * 255i)) {
-        return subject.add_three_bit(target);
+        return subject.add_three_bytes(target);
       } else {
         return if (target >= 255i) {
-          return subject.add_two_bit(target);
+          return subject.add_two_bytes(target);
         } else {
-          return subject.add_one_bit(target);
+          return subject.add_one_bytes(target);
         };
       };
     };
   }
 
   test "std.string.utf_8.add_character Creats a single bit char" {
-    return "".add_character(48i).equals("0");
+    return "".add_character(48i).expect_equals("0");
   }
 
   test "std.string.utf_8.add_character Creates a two bit char" {
