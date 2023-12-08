@@ -48,33 +48,33 @@ namespace std.string.utf_8 {
 
   export fn get_character(target: string, index: int): StringIterableContext {
     store start = target.get_char(index);
-    store length = target.length();
+    store size = target.length();
 
     return if (start >= (0b11110000)) {
       return make StringIterableContext {
         assign next = index + 4i;
         assign result = target.extract_four_bytes(index);
-        assign done = index + 4i >= length;
+        assign done = index + 4i >= size;
       };
     } else {
       return if (start >= (0b11100000)) {
         return make StringIterableContext {
           assign next = index + 3i;
           assign result = target.extract_three_bytes(index);
-          assign done = index + 3i >= length;
+          assign done = index + 3i >= size;
         };
       } else {
         return if (start >= 0b11000000) {
           return make StringIterableContext {
             assign next = index + 2i;
             assign result = target.extract_two_bytes(index);
-            assign done = index + 2i >= length;
+            assign done = index + 2i >= size;
           };
         } else {
           return make StringIterableContext {
             assign next = index + 1i;
             assign result = target.extract_one_bytes(index);
-            assign done = index + 1i >= length;
+            assign done = index + 1i >= size;
           };
         };
       };
