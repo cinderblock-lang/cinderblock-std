@@ -2,7 +2,6 @@ namespace std.string.utf_8 {
   using std.string;
   using std.testing;
   using std.iterable;
-  using std.io;
   
   export struct StringIterableContext {
     done: bool;
