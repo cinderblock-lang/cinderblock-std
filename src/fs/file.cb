@@ -1,0 +1,48 @@
+namespace std.fs {
+  using std.testing;
+
+  export struct FileStats {
+    size: ulong;
+    modified: ulong;
+    created: ulong;
+  }
+
+  export struct ReadableFile {
+    read: (length: int) -> string;
+    close: () -> null;
+  }
+
+  export struct WriteableFile {
+    read: (length: int) -> string;
+    write: (data: string) -> null;
+    close: () -> null;
+  }
+
+  export unsafe fn open_read(path: string): ReadableFile {
+    store handle = so_open(path, 0i);
+
+    return make ReadableFile {
+      assign read = read(handle);
+      assign close = fn () -> so_close(handle);
+    };
+  }
+
+  unsafe fn read(length: int, handle: int): string {
+    return so_read(handle, length);
+  }
+
+  unsafe fn stat(handle: int): FileStats {
+    return make FileStats {
+      store system_stats = so_stat(handle);
+      assign size = system_stats.st_size;
+      assign modified = system_stats.st_mtime;
+      assign created = system_stats.st_ctime;
+    };
+  }
+
+  test "std.fs may open and read a file" {
+    store file = open_read("/home/paul/dev/unbound/std/test-resources/small-text-file.txt");
+
+    return file.read(14i).expect_equals("I love my wife");
+  }
+}
