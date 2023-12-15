@@ -41,7 +41,7 @@ namespace std.fs {
   }
 
   test "std.fs may open and read a file" {
-    store file = open_read("/home/paul/dev/unbound/std/test-resources/small-text-file.txt");
+    store file = open_read("/home/dev/cinderblock/cinderblock-std/test-resources/small-text-file.txt");
 
     return file.read(14i).expect_equals("I love my wife");
   }

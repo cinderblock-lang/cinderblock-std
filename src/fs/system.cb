@@ -21,7 +21,7 @@ namespace std.fs {
     return system(2i, path, flags);
   }
 
-  unsafe fn so_read(handle: int, length: int): int {
+  unsafe fn so_read(handle: int, length: int): string {
     return system(0i, handle, out: string, length)[length];
   }
 
