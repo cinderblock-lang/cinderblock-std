@@ -32,4 +32,8 @@ namespace std.fs {
   unsafe fn so_close(handle: int): int {
     return system(3i, handle);
   }
+
+  unsafe fn so_write(handle: int, data: string, length: int): int {
+    return system(1i, handle, data, length);
+  }
 }
