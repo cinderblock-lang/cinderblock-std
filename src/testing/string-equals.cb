@@ -3,7 +3,7 @@ namespace std.testing {
   using std.io;
 
   export unsafe fn expect_equals(a: string, b: string) {
-    store result = a.equals(b);
+    result -> a.equals(b);
     return if (result) {
       return true;
     } else {

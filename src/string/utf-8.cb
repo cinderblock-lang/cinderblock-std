@@ -10,8 +10,8 @@ namespace std.string.utf_8 {
   }
 
   fn isolate_bits(target: int, skip: int, take: int): int {
-    store mask = (1i << take) - 1i;
-    store start = target >> skip;
+    mask -> (1i << take) - 1i;
+    start -> target >> skip;
     return start & mask;
   }
 
@@ -41,8 +41,8 @@ namespace std.string.utf_8 {
   }
 
   export fn get_character(target: string, index: int): StringIterableContext {
-    store start = target.get_char(index);
-    store size = target.length();
+    start -> target.get_char(index);
+    size -> target.length();
 
     return if (start.isolate_bits(3i, 5i) == 0b11110) {
       return make StringIterableContext {
