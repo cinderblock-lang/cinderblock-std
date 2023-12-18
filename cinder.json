@@ -9,7 +9,8 @@
     "./src/io/log.cb",
     "./src/testing/string-equals.cb",
     { "linux": "./src/fs/system.cb" },
-    "./src/fs/file.cb"
+    "./src/fs/file.cb",
+    "./src/string/number.cb"
   ],
   "targets": ["linux", "macos", "windows", "android", "ios", "wasm"],
   "bin": "bin",

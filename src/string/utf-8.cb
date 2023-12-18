@@ -9,7 +9,7 @@ namespace std.string.utf_8 {
     next: int;
   }
 
-  fn isolate_bits(target: int, skip: int, take: int): int {
+  fn isolate_bits(target: use int | char = T, skip: int, take: int): int {
     mask -> (1i << take) - 1i;
     start -> target >> skip;
     return start & mask;
