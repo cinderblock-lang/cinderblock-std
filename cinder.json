@@ -10,7 +10,9 @@
     "./src/testing/string-equals.cb",
     { "linux": "./src/fs/system.cb" },
     "./src/fs/file.cb",
-    "./src/string/number.cb"
+    "./src/string/number.cb",
+    "./src/cast/to-char.cb",
+    "./src/cast/to-uint.cb"
   ],
   "targets": ["linux", "macos", "windows", "android", "ios", "wasm"],
   "bin": "bin",

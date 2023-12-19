@@ -2,6 +2,7 @@ namespace std.string.utf_8 {
   using std.string;
   using std.testing;
   using std.iterable;
+  using std.cast;
   
   export struct StringIterableContext {
     done: bool;
@@ -91,27 +92,27 @@ namespace std.string.utf_8 {
 
   fn add_four_bytes(subject: string, target: int): string {
     return subject
-      .add_char(0b11110000 + target.isolate_bits(18i, 3i))
-      .add_char(0b10000000 + target.isolate_bits(12i, 6i))
-      .add_char(0b10000000 + target.isolate_bits(6i, 6i))
-      .add_char(0b10000000 + target.isolate_bits(0i, 6i));
+      .add_char(to_char(0b11110000 + target.isolate_bits(18i, 3i)))
+      .add_char(to_char(0b10000000 + target.isolate_bits(12i, 6i)))
+      .add_char(to_char(0b10000000 + target.isolate_bits(6i, 6i)))
+      .add_char(to_char(0b10000000 + target.isolate_bits(0i, 6i)));
   }
 
   fn add_three_bytes(subject: string, target: int): string {
     return subject
-      .add_char(0b11100000 + target.isolate_bits(12i, 4i))
-      .add_char(0b10000000 + target.isolate_bits(6i, 6i))
-      .add_char(0b10000000 + target.isolate_bits(0i, 6i));
+      .add_char(to_char(0b11100000 + target.isolate_bits(12i, 4i)))
+      .add_char(to_char(0b10000000 + target.isolate_bits(6i, 6i)))
+      .add_char(to_char(0b10000000 + target.isolate_bits(0i, 6i)));
   }
 
   fn add_two_bytes(subject: string, target: int): string {
     return subject
-      .add_char(0b11000000 + target.isolate_bits(6i, 5i))
-      .add_char(0b10000000 + target.isolate_bits(0i, 6i));
+      .add_char(to_char(0b11000000 + target.isolate_bits(6i, 5i)))
+      .add_char(to_char(0b10000000 + target.isolate_bits(0i, 6i)));
   }
 
   fn add_one_bytes(subject: string, target: int): string {
-    return subject.add_char(target);
+    return subject.add_char(to_char(target));
   }
 
   export fn add_character(subject: string, target: int): string {
